@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { fieldReducer } from './store/field.reducer';
-import { GameField } from './models';
+import { GameField, GameObject } from './models';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +12,12 @@ import { GameField } from './models';
 })
 export class AppComponent {
 
-  field$: Observable<GameField>;
+  items$: Observable<Array<Array<GameObject>>>;
 
-  constructor(private store: Store<{ field: GameField }>) {
-    this.field$ = store.pipe(select('field'));
+  constructor(private store$: Store<{ field: GameField }>) {
+    this.items$ = store$.pipe(select('field'), map((field) => field.items));
+
+    this.items$.subscribe(console.log);
   }
 
 }
