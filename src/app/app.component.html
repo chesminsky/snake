@@ -1,6 +1,6 @@
 <div class="field">
     <table>
-        <tr *ngFor="let row of field">
+        <tr *ngFor="let row of field$ | async">
             <td *ngFor="let item of row" [ngClass]="{
                 'snake': item === 1,
                 'egg': item === 2

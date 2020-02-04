@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { fieldReducer } from './store/field.reducer';
+import { GameField } from './models';
 
 @Component({
   selector: 'app-root',
@@ -7,16 +11,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  field = [
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
-  ];
+  field$: Observable<GameField>;
+
+  constructor(private store: Store<{ field: GameField }>) {
+    this.field$ = store.pipe(select('field'));
+  }
+
 }
