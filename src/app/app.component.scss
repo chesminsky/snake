@@ -1,0 +1,25 @@
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.field {
+    width: 600px;
+    height: 600px;
+    border: 1px solid;
+}
+
+td {
+    height: 60px;
+    width: 60px;
+
+    &.snake {
+        background-color: green;
+    }
+    
+    &.egg {
+        background-color: yellow;
+    }
+}
