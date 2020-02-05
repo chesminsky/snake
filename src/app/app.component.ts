@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
     this.store$.pipe(select('field'))
       .subscribe((field) => {
         this.items = field.items;
-        console.log(field.direction);
         if (!field.valid) {
           this.lost = true;
           clearInterval(this.timerId);
@@ -35,7 +34,6 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener('window:keyup', ['$event'])
-  @debounce(100)
   keyEvent(event: KeyboardEvent) {
     if (event.key === 'w') {
       this.store$.dispatch(changeDirection({ direction: GameMoveDirection.Up}));

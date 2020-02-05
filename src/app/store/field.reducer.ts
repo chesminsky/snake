@@ -4,6 +4,7 @@ import { GameField, GameMoveDirection, Snake, GameFieldItems, GameObject } from 
 import { FIELD_SIZE } from '../constants';
 
 export const initialState: GameField = {
+  nextDirection: null,
   direction: GameMoveDirection.Right,
   items: generateField(),
   snake: [{x: 5, y: 5}, {x: 4, y: 5}, {x: 3, y: 5}, {x: 2, y: 5}, {x: 1, y: 5}],
@@ -25,28 +26,31 @@ function onRandomEgg(state): GameField {
 }
 
 function onChangeDirection(state: GameField, { direction }): GameField {
-  if (
-    (direction === GameMoveDirection.Right && state.direction !== GameMoveDirection.Left) ||
-    (direction === GameMoveDirection.Left && state.direction !== GameMoveDirection.Right) ||
-    (direction === GameMoveDirection.Up && state.direction !== GameMoveDirection.Down) ||
-    (direction === GameMoveDirection.Down && state.direction !== GameMoveDirection.Up)
-  ) {
-    return { ...state, direction };
-  } else {
-    return { ...state };
-  }
+  return { ...state, nextDirection: direction };
 }
 
 function onTick(state: GameField): GameField {
 
-  const snake = moveSnake(state.snake, state.direction);
+  let direction = state.direction;
+
+  if (
+    (state.nextDirection === GameMoveDirection.Right && state.direction !== GameMoveDirection.Left) ||
+    (state.nextDirection === GameMoveDirection.Left && state.direction !== GameMoveDirection.Right) ||
+    (state.nextDirection === GameMoveDirection.Up && state.direction !== GameMoveDirection.Down) ||
+    (state.nextDirection === GameMoveDirection.Down && state.direction !== GameMoveDirection.Up)
+  ) {
+    direction = state.nextDirection;
+  }
+
+  const snake = moveSnake(state.snake, direction);
   const { items, valid } = getFieldItems(state.items, snake);
 
   return {
     ...state,
     snake,
     items,
-    valid
+    valid,
+    direction
   };
 }
 

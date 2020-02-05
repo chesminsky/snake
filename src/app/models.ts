@@ -1,4 +1,5 @@
 export interface GameField {
+    nextDirection: GameMoveDirection;
     direction: GameMoveDirection;
     items: GameFieldItems;
     snake: Snake;
