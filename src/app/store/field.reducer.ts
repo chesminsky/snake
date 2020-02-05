@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { randomEgg, tick } from './field.actions';
+import { randomEgg, tick, changeDirection } from './field.actions';
 import { GameField, GameMoveDirection, Snake, GameFieldItems } from '../models';
 import { FIELD_SIZE } from '../constants';
 
@@ -11,7 +11,8 @@ export const initialState: GameField = {
 
 const fieldReducerFn = createReducer((initialState),
   on(randomEgg, onRandomEgg),
-  on(tick, onTick)
+  on(tick, onTick),
+  on(changeDirection, onChangeDirection)
 );
 
 export function fieldReducer(state, action) {
@@ -20,6 +21,18 @@ export function fieldReducer(state, action) {
 
 
 function onRandomEgg(state) {
+  return state;
+}
+
+function onChangeDirection(state: GameField, { direction }) {
+  if (
+    (direction === GameMoveDirection.Right && state.direction !== GameMoveDirection.Left) ||
+    (direction === GameMoveDirection.Left && state.direction !== GameMoveDirection.Right) ||
+    (direction === GameMoveDirection.Up && state.direction !== GameMoveDirection.Down) ||
+    (direction === GameMoveDirection.Down && state.direction !== GameMoveDirection.Up)
+  ) {
+    state.direction = direction;
+  }
   return state;
 }
 

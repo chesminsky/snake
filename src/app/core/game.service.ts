@@ -15,6 +15,6 @@ export class GameService {
   init() {
     setInterval(() => {
       this.store$.dispatch(tick());
-    }, 1000);
+    }, 300);
   }
 }
