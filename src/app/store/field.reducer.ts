@@ -40,7 +40,7 @@ function onChangeDirection(state: GameField, { direction }): GameField {
 function onTick(state: GameField): GameField {
 
   const snake = moveSnake(state.snake, state.direction);
-  const { items, valid } = getFieldItems(state.items, state.snake);
+  const { items, valid } = getFieldItems(state.items, snake);
 
   return {
     ...state,

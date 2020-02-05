@@ -1,10 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { fieldReducer } from './store/field.reducer';
 import { GameField, GameObject, GameMoveDirection } from './models';
-import { map } from 'rxjs/operators';
 import { changeDirection, tick } from './store/field.actions';
+import { debounce } from './utils';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +25,8 @@ export class AppComponent implements OnInit {
 
     this.store$.pipe(select('field'))
       .subscribe((field) => {
-        this.items = JSON.parse(JSON.stringify(field.items));
+        this.items = field.items;
+        console.log(field.direction);
         if (!field.valid) {
           this.lost = true;
           clearInterval(this.timerId);
@@ -36,6 +35,7 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener('window:keyup', ['$event'])
+  @debounce(100)
   keyEvent(event: KeyboardEvent) {
     if (event.key === 'w') {
       this.store$.dispatch(changeDirection({ direction: GameMoveDirection.Up}));
