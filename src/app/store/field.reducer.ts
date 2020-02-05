@@ -1,12 +1,13 @@
 import { createReducer, on } from '@ngrx/store';
 import { randomEgg, tick, changeDirection } from './field.actions';
-import { GameField, GameMoveDirection, Snake, GameFieldItems } from '../models';
+import { GameField, GameMoveDirection, Snake, GameFieldItems, GameObject } from '../models';
 import { FIELD_SIZE } from '../constants';
 
 export const initialState: GameField = {
   direction: GameMoveDirection.Right,
   items: generateField(),
-  snake: [{x: 5, y: 5}, {x: 4, y: 5}]
+  snake: [{x: 5, y: 5}, {x: 4, y: 5}, {x: 3, y: 5}, {x: 2, y: 5}, {x: 1, y: 5}],
+  valid: true
 };
 
 const fieldReducerFn = createReducer((initialState),
@@ -19,29 +20,34 @@ export function fieldReducer(state, action) {
   return fieldReducerFn(state, action);
 }
 
-
-function onRandomEgg(state) {
-  return state;
+function onRandomEgg(state): GameField {
+  return { ...state };
 }
 
-function onChangeDirection(state: GameField, { direction }) {
+function onChangeDirection(state: GameField, { direction }): GameField {
   if (
     (direction === GameMoveDirection.Right && state.direction !== GameMoveDirection.Left) ||
     (direction === GameMoveDirection.Left && state.direction !== GameMoveDirection.Right) ||
     (direction === GameMoveDirection.Up && state.direction !== GameMoveDirection.Down) ||
     (direction === GameMoveDirection.Down && state.direction !== GameMoveDirection.Up)
   ) {
-    state.direction = direction;
+    return { ...state, direction };
+  } else {
+    return { ...state };
   }
-  return state;
 }
 
-function onTick(state: GameField) {
+function onTick(state: GameField): GameField {
 
-  state.snake = moveSnake(state.snake, state.direction);
-  state.items = getFieldItems(state.items, state.snake);
+  const snake = moveSnake(state.snake, state.direction);
+  const { items, valid } = getFieldItems(state.items, state.snake);
 
-  return state;
+  return {
+    ...state,
+    snake,
+    items,
+    valid
+  };
 }
 
 function moveSnake(snake: Snake, d: GameMoveDirection): Snake {
@@ -84,22 +90,27 @@ function moveSnake(snake: Snake, d: GameMoveDirection): Snake {
 
     newSnake.push(newItem);
   }
-  console.log('snake', newSnake);
+
   return newSnake;
 }
 
-function getFieldItems(field: GameFieldItems, snake: Snake): GameFieldItems {
-  for(const row of field) {
-    for(let i of row.keys()) {
-      row[i] = 0;
+function getFieldItems(items: GameFieldItems, snake: Snake): { items: GameFieldItems, valid: boolean } {
+
+  let valid = true;
+
+  const newItems = generateField();
+
+  for (const item of snake) {
+    const o = newItems[item.y][item.x];
+    if (o === GameObject.Empty) {
+      newItems[item.y][item.x] = 1;
+    }
+    if (o === GameObject.Snake) {
+      valid = false;
     }
   }
 
-  for (const item of snake) {
-    field[item.y][item.x] = 1;
-  }
-  console.log('field', field);
-  return field;
+  return { items: newItems, valid };
 }
 
 
@@ -108,7 +119,7 @@ function generateField(): GameFieldItems {
   for (let i = 0; i < FIELD_SIZE; i++) {
     arr[i] = [];
     for (let j = 0; j < FIELD_SIZE; j++) {
-      arr[i][j] = 0;
+      arr[i][j] = GameObject.Empty;
     }
   }
   return arr;

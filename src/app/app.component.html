@@ -1,10 +1,16 @@
 <div class="field">
     <table>
-        <tr *ngFor="let row of items$ | async">
+        <tr *ngFor="let row of items">
             <td *ngFor="let item of row" [ngClass]="{
                 'snake': item === 1,
                 'egg': item === 2
             }"></td>
         </tr>
     </table>
+</div>
+
+<div class="score">
+    <span class="loser" *ngIf="lost">
+        YOU LOSE
+    </span>
 </div>

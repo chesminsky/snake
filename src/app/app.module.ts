@@ -12,7 +12,7 @@ import { fieldReducer } from './store/field.reducer';
   ],
   imports: [
     BrowserModule,
-    StoreModule.forRoot({ field: fieldReducer })
+    StoreModule.forRoot({ field: fieldReducer }, { runtimeChecks: { strictStateImmutability: true, strictActionImmutability: true }})
   ],
   providers: [],
   bootstrap: [AppComponent]

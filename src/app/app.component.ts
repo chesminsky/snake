@@ -4,8 +4,7 @@ import { Observable } from 'rxjs';
 import { fieldReducer } from './store/field.reducer';
 import { GameField, GameObject, GameMoveDirection } from './models';
 import { map } from 'rxjs/operators';
-import { GameService } from './core/game.service';
-import { changeDirection } from './store/field.actions';
+import { changeDirection, tick } from './store/field.actions';
 
 @Component({
   selector: 'app-root',
@@ -13,20 +12,27 @@ import { changeDirection } from './store/field.actions';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
-  items$: Observable<Array<Array<GameObject>>>;
+  lost = false;
+  items: Array<Array<GameObject>> = [];
+  private timerId;
 
   constructor(
-    private store$: Store<{ field: GameField }>,
-    private gameService: GameService
+    private store$: Store<{ field: GameField }>
   ) { }
 
   ngOnInit() {
+    this.timerId = setInterval(() => {
+      this.store$.dispatch(tick());
+    }, 300);
 
-    this.gameService.init();
-
-    this.items$ = this.store$.pipe(select('field'), map((field) => field.items));
-    this.items$.subscribe(console.log);
+    this.store$.pipe(select('field'))
+      .subscribe((field) => {
+        this.items = JSON.parse(JSON.stringify(field.items));
+        if (!field.valid) {
+          this.lost = true;
+          clearInterval(this.timerId);
+        }
+      });
   }
 
   @HostListener('window:keyup', ['$event'])
