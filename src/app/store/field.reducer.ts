@@ -8,7 +8,8 @@ export const initialState: GameField = {
   direction: GameMoveDirection.Right,
   items: generateField(),
   snake: [{x: 5, y: 5}, {x: 4, y: 5}, {x: 3, y: 5}, {x: 2, y: 5}, {x: 1, y: 5}],
-  valid: true
+  valid: true,
+  egg: { x: 1, y: 1}
 };
 
 const fieldReducerFn = createReducer((initialState),
@@ -43,14 +44,36 @@ function onTick(state: GameField): GameField {
   }
 
   const snake = moveSnake(state.snake, direction);
-  const { items, valid } = getFieldItems(state.items, snake);
+
+  let valid = true;
+
+  const items = generateField();
+
+  let egg = state.egg;
+  if (egg) {
+    items[egg.y][egg.x] = GameObject.Egg;
+
+    if (egg.x === snake[0].x && egg.y === snake[0].y) {
+      egg = null;
+      snake.push(snake[snake.length - 1]);
+    }
+  }
+
+  for (const [i, s] of snake.entries()) {
+    items[s.y][s.x] = GameObject.Snake;
+
+    if (i > 0 && s.x === snake[0].x && s.y === snake[0].y) {
+      valid = false;
+    }
+  }
 
   return {
     ...state,
     snake,
     items,
     valid,
-    direction
+    direction,
+    egg
   };
 }
 
@@ -98,24 +121,6 @@ function moveSnake(snake: Snake, d: GameMoveDirection): Snake {
   return newSnake;
 }
 
-function getFieldItems(items: GameFieldItems, snake: Snake): { items: GameFieldItems, valid: boolean } {
-
-  let valid = true;
-
-  const newItems = generateField();
-
-  for (const item of snake) {
-    const o = newItems[item.y][item.x];
-    if (o === GameObject.Empty) {
-      newItems[item.y][item.x] = 1;
-    }
-    if (o === GameObject.Snake) {
-      valid = false;
-    }
-  }
-
-  return { items: newItems, valid };
-}
 
 
 function generateField(): GameFieldItems {

@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.timerId = setInterval(() => {
       this.store$.dispatch(tick());
-    }, 300);
+    }, 500);
 
     this.store$.pipe(select('field'))
       .subscribe((field) => {
@@ -31,6 +31,13 @@ export class AppComponent implements OnInit {
           clearInterval(this.timerId);
         }
       });
+  }
+
+  getCellClass(item: number) {
+    return {
+      snake: item === GameObject.Snake,
+      egg: item === GameObject.Egg
+    };
   }
 
   @HostListener('window:keyup', ['$event'])

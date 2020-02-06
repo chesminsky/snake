@@ -1,10 +1,7 @@
 <div class="field">
     <table>
         <tr *ngFor="let row of items">
-            <td *ngFor="let item of row" [ngClass]="{
-                'snake': item === 1,
-                'egg': item === 2
-            }"></td>
+            <td *ngFor="let item of row" [ngClass]="getCellClass(item)"></td>
         </tr>
     </table>
 </div>

@@ -4,6 +4,7 @@ export interface GameField {
     items: GameFieldItems;
     snake: Snake;
     valid: boolean;
+    egg?: Egg;
 }
 
 export type GameFieldItems= Array<Array<GameObject>>;
@@ -22,3 +23,5 @@ export enum GameMoveDirection {
 }
 
 export type Snake = Array<{ x: number; y: number; }>;
+export interface Egg { x: number; y: number; }
+
