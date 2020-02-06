@@ -48,16 +48,16 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (event.key === 'w') {
+    if (event.code === 'ArrowUp') {
       this.store$.dispatch(changeDirection({ direction: GameMoveDirection.Up}));
     }
-    if (event.key === 's') {
+    if (event.key === 'ArrowDown') {
       this.store$.dispatch(changeDirection({ direction: GameMoveDirection.Down}));
     }
-    if (event.key === 'a') {
+    if (event.key === 'ArrowLeft') {
       this.store$.dispatch(changeDirection({ direction: GameMoveDirection.Left}));
     }
-    if (event.key === 'd') {
+    if (event.key === 'ArrowRight') {
       this.store$.dispatch(changeDirection({ direction: GameMoveDirection.Right}));
     }
   }
