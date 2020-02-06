@@ -9,7 +9,8 @@ export const initialState: GameField = {
   items: generateField(),
   snake: [{x: 5, y: 5}, {x: 4, y: 5}, {x: 3, y: 5}, {x: 2, y: 5}, {x: 1, y: 5}],
   valid: true,
-  egg: { x: 1, y: 1}
+  egg: { x: 1, y: 1},
+  score: 0
 };
 
 const fieldReducerFn = createReducer((initialState),
@@ -67,12 +68,14 @@ function onTick(state: GameField): GameField {
   const items = generateField();
 
   let egg = state.egg;
+  let score = state.score;
   if (egg) {
     items[egg.y][egg.x] = GameObject.Egg;
 
     if (egg.x === snake[0].x && egg.y === snake[0].y) {
       egg = null;
       snake.push(snake[snake.length - 1]);
+      score++;
     }
   }
 
@@ -90,7 +93,8 @@ function onTick(state: GameField): GameField {
     items,
     valid,
     direction,
-    egg
+    egg,
+    score
   };
 }
 

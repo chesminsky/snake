@@ -4,7 +4,8 @@ export interface GameField {
     items: GameFieldItems;
     snake: Snake;
     valid: boolean;
-    egg?: Egg;
+    egg: Egg;
+    score: number;
 }
 
 export type GameFieldItems= Array<Array<GameObject>>;

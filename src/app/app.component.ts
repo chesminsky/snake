@@ -12,6 +12,7 @@ import { debounce } from './utils';
 export class AppComponent implements OnInit {
   lost = false;
   items: Array<Array<GameObject>> = [];
+  score = 0;
 
   constructor(
     private store$: Store<{ field: GameField }>
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
     this.store$.pipe(select('field'))
       .subscribe((field) => {
         this.items = field.items;
+        this.score = field.score;
         if (!field.valid) {
           this.lost = true;
           clearInterval(fieldTicker);

@@ -7,7 +7,10 @@
 </div>
 
 <div class="score">
-    <span class="loser" *ngIf="lost">
-        YOU LOSE
-    </span>
+    <div class="loser" *ngIf="lost">
+        YOU LOSE !
+    </div>
+    <div>
+        Your score: {{ score }}
+    </div>
 </div>
