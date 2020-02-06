@@ -23,6 +23,23 @@ export function fieldReducer(state, action) {
 }
 
 function onRandomEgg(state): GameField {
+
+  const randomize = () => {
+    const x = Math.floor(Math.random() * 10);
+    const y = Math.floor(Math.random() * 10);
+
+    if (
+      state.snake.every((s) => s.x !== x && s.y !== y)
+    ) {
+      return randomize();
+    }
+    return { x, y };
+  };
+
+  if (!state.egg) {
+    return { ...state, egg: randomize()}
+  }
+
   return { ...state };
 }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { GameField, GameObject, GameMoveDirection } from './models';
-import { changeDirection, tick } from './store/field.actions';
+import { changeDirection, tick, randomEgg } from './store/field.actions';
 import { debounce } from './utils';
 
 @Component({
@@ -12,23 +12,27 @@ import { debounce } from './utils';
 export class AppComponent implements OnInit {
   lost = false;
   items: Array<Array<GameObject>> = [];
-  private timerId;
 
   constructor(
     private store$: Store<{ field: GameField }>
   ) { }
 
   ngOnInit() {
-    this.timerId = setInterval(() => {
+    const fieldTicker = setInterval(() => {
       this.store$.dispatch(tick());
     }, 500);
+
+    const eggTicker = setInterval(() => {
+      this.store$.dispatch(randomEgg());
+    }, 5000);
 
     this.store$.pipe(select('field'))
       .subscribe((field) => {
         this.items = field.items;
         if (!field.valid) {
           this.lost = true;
-          clearInterval(this.timerId);
+          clearInterval(fieldTicker);
+          clearInterval(eggTicker);
         }
       });
   }
